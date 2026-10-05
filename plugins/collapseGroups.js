@@ -1,4 +1,8 @@
-import { collectStylesheet, computeStyle } from '../lib/style.js';
+import {
+  collectStylesheet,
+  computeStyle,
+  parseStyleDeclarations,
+} from '../lib/style.js';
 import { elemsGroups, inheritableAttrs } from './_collections.js';
 
 export const name = 'collapseGroups';
@@ -84,6 +88,27 @@ export const fn = (root) => {
                 node.attributes.transform == null &&
                 firstChild.attributes.transform == null))
           ) {
+            // moving the style attribute to the child would change the
+            // cascade, since inline styles have a higher priority than
+            // presentation attributes and stylesheet rules; declarations
+            // that would override the child's own styles make the group
+            // uncollapsible
+            if (
+              node.attributes.style != null &&
+              firstChild.attributes.style == null
+            ) {
+              const childStyle = computeStyle(stylesheet, firstChild);
+              const hasConflictingStyles = parseStyleDeclarations(
+                node.attributes.style,
+              ).some(({ name }) => {
+                const computed = childStyle[name];
+                return computed != null && computed.inherited === false;
+              });
+              if (hasConflictingStyles) {
+                return;
+              }
+            }
+
             const newChildElemAttrs = { ...firstChild.attributes };
 
             for (const [name, value] of Object.entries(node.attributes)) {

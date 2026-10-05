@@ -1,0 +1,16 @@
+Don't remove a zero-length path when stroke-linecap is set in the style
+attribute with an uppercase property name. CSS property names are
+case-insensitive, so STROKE-LINECAP:round must keep the path that renders
+as a dot.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10h0" stroke="black" stroke-width="8" style="STROKE-LINECAP:round"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M10 10h0" stroke="black" stroke-width="8" style="STROKE-LINECAP:round"/>
+</svg>

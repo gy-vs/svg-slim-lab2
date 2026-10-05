@@ -1,0 +1,26 @@
+Don't collapse a group when the group style would override the child's own
+presentation attributes, since inline styles have a higher priority than
+presentation attributes. CSS property names are case-insensitive, so the
+same applies to uppercase property names.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g style="fill:red">
+        <rect fill="blue" width="10" height="10"/>
+    </g>
+    <g style="FILL:red">
+        <rect fill="blue" width="20" height="20"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g style="fill:red">
+        <rect fill="blue" width="10" height="10"/>
+    </g>
+    <g style="FILL:red">
+        <rect fill="blue" width="20" height="20"/>
+    </g>
+</svg>

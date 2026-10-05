@@ -1,0 +1,22 @@
+Don't remove default attributes when the parent sets the same property in
+the style attribute with an uppercase property name. CSS property names are
+case-insensitive, so FILL:red must keep fill="#000" from being treated as a
+removable default value.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g style="FILL:red">
+        <rect fill="#000" width="10" height="10"/>
+        <rect width="20" height="20"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g style="FILL:red">
+        <rect fill="#000" width="10" height="10"/>
+        <rect width="20" height="20"/>
+    </g>
+</svg>

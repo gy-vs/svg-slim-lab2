@@ -1,0 +1,25 @@
+Don't collapse a group when the group style would override a stylesheet
+rule matching the child, since inline styles have a higher priority than
+stylesheet rules.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        rect { fill: blue; }
+    </style>
+    <g style="fill:red">
+        <rect width="10" height="10"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        rect { fill: blue; }
+    </style>
+    <g style="fill:red">
+        <rect width="10" height="10"/>
+    </g>
+</svg>
