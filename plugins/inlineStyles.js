@@ -3,7 +3,11 @@ import { syntax } from 'csso';
 import { attrsGroups, pseudoClasses } from './_collections.js';
 import { detachNodeFromParent, querySelectorAll } from '../lib/xast.js';
 import { visitSkip } from '../lib/util/visit.js';
-import { compareSpecificity, includesAttrSelector } from '../lib/style.js';
+import {
+  compareSpecificity,
+  includesAttrSelector,
+  normalizeDeclarationName,
+} from '../lib/style.js';
 
 /**
  * @typedef InlineStylesParams
@@ -236,7 +240,10 @@ export const fn = (root, params) => {
                   firstListItem = item;
                 }
 
-                styleDeclarationItems.set(node.property.toLowerCase(), item);
+                styleDeclarationItems.set(
+                  normalizeDeclarationName(node.property),
+                  item,
+                );
               },
             });
             // merge declarations
@@ -247,7 +254,9 @@ export const fn = (root, params) => {
                 // no inline styles, external styles,                                    external styles used
                 // inline styles,    external styles same   priority as inline styles,   inline   styles used
                 // inline styles,    external styles higher priority than inline styles, external styles used
-                const property = ruleDeclaration.property;
+                const property = normalizeDeclarationName(
+                  ruleDeclaration.property,
+                );
 
                 if (
                   attrsGroups.presentation.has(property) &&
@@ -256,6 +265,12 @@ export const fn = (root, params) => {
                   )
                 ) {
                   delete selectedEl.attributes[property];
+                }
+
+                // normalize case-insensitive property names for the generated
+                // inline style, custom properties have to stay untouched
+                if (property !== ruleDeclaration.property) {
+                  ruleDeclaration.property = property;
                 }
 
                 const matchedItem = styleDeclarationItems.get(property);

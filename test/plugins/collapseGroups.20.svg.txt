@@ -1,0 +1,16 @@
+Collapse the group when the inline style and the child's presentation
+attribute resolve to the same value, nothing visually changes.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g style="fill:red">
+        <rect width="10" height="10" fill="red"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect width="10" height="10" fill="red" style="fill:red"/>
+</svg>

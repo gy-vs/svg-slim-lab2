@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+  <g style="FILL:red">
+    <rect width="10" height="10" fill="#000"/>
+    <rect x="20" width="10" height="10"/>
+  </g>
+  <g style="STROKE:red">
+    <path d="M0 0L10 10" stroke-width="4"/>
+    <path d="M0 10L10 20" stroke-width="4"/>
+  </g>
+  <path d="M5 5L5 5" stroke-width="8" style="STROKE-LINECAP:round"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100">
+    <g style="fill:red">
+        <path fill="#000" d="M0 0h10v10H0z"/>
+        <path d="M20 0h10v10H20z"/>
+    </g>
+    <g stroke-width="4" style="stroke:red">
+        <path d="m0 0 10 10M0 10l10 10"/>
+    </g>
+    <path d="M5 5" style="stroke-linecap:round"/>
+</svg>

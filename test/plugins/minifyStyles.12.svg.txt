@@ -1,0 +1,25 @@
+Lowercases non-custom CSS property names in style elements and style
+attributes, CSS property names are ASCII case-insensitive. Custom properties
+(starting with two dashes) are case-sensitive and stay untouched.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .a {
+            FILL: red;
+            STROKE-LINECAP: round;
+            --MyProp: 1;
+        }
+    </style>
+    <rect class="a" width="10" height="10" style="FILL:blue;--Bar:2"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        .a{fill:red;stroke-linecap:round;--MyProp:1}
+    </style>
+    <rect class="a" width="10" height="10" style="fill:#00f;--Bar:2"/>
+</svg>

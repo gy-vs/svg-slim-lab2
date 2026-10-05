@@ -1,0 +1,18 @@
+Don't collapse a group whose inline style overrides any presentation
+attribute of the only child, including stroke-width.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g style="stroke-width:2">
+        <path d="M0 0L10 10" stroke-width="8"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g style="stroke-width:2">
+        <path d="M0 0L10 10" stroke-width="8"/>
+    </g>
+</svg>

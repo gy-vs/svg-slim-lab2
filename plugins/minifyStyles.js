@@ -1,6 +1,7 @@
 import * as csso from 'csso';
 import { detachNodeFromParent } from '../lib/xast.js';
 import { hasScripts } from '../lib/svgo/tools.js';
+import { normalizeStyleDeclarations } from '../lib/style.js';
 
 /**
  * @typedef Usage
@@ -120,10 +121,13 @@ export const fn = (_root, { usage, ...params }) => {
             styleNode.children[0].type === 'cdata'
           ) {
             const cssText = styleNode.children[0].value;
-            const minified = csso.minify(cssText, {
-              ...params,
-              usage: cssoUsage,
-            }).css;
+            const minified = normalizeStyleDeclarations(
+              csso.minify(cssText, {
+                ...params,
+                usage: cssoUsage,
+              }).css,
+              'stylesheet',
+            );
 
             if (minified.length === 0) {
               detachNodeFromParent(styleNode, styleNodeParent);
@@ -145,9 +149,11 @@ export const fn = (_root, { usage, ...params }) => {
         for (const node of elementsWithStyleAttributes) {
           // style attribute
           const elemStyle = node.attributes.style;
-          node.attributes.style = csso.minifyBlock(elemStyle, {
-            ...params,
-          }).css;
+          node.attributes.style = normalizeStyleDeclarations(
+            csso.minifyBlock(elemStyle, {
+              ...params,
+            }).css,
+          );
         }
       },
     },

@@ -1,0 +1,18 @@
+Lowercases non-custom CSS property names in stylesheet rules before inlining
+them, so uppercase names behave exactly like lowercase ones and replace the
+element's presentation attribute.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <style>
+        rect { FILL: red }
+    </style>
+    <rect width="10" height="10" fill="blue"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <rect width="10" height="10" style="fill:red"/>
+</svg>

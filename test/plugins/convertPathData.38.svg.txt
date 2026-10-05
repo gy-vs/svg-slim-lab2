@@ -1,0 +1,15 @@
+A zero-length path segment is kept when a round line cap is declared through
+an inline style, even when the CSS property name uses uppercase letters, the
+segment renders as a round dot.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 5L5 5" stroke="red" stroke-width="8" style="STROKE-LINECAP:round"/>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <path d="M5 5h0" stroke="red" stroke-width="8" style="STROKE-LINECAP:round"/>
+</svg>

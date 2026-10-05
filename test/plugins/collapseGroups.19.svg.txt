@@ -1,0 +1,19 @@
+Don't collapse a group whose inline style overrides a presentation attribute
+of the only child, the presentation attribute has a lower priority than the
+inherited style.
+
+===
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g style="fill:red">
+        <rect width="10" height="10" fill="blue"/>
+    </g>
+</svg>
+
+@@@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <g style="fill:red">
+        <rect width="10" height="10" fill="blue"/>
+    </g>
+</svg>

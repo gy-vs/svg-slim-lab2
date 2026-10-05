@@ -64,6 +64,34 @@ describe('svgo', () => {
     });
     expect(normalize(result.data)).toStrictEqual(expected);
   });
+  it('should handle uppercase CSS property names like lowercase ones', async () => {
+    const [original, expected] = await parseFixture(
+      'uppercase-style-properties.svg.txt',
+    );
+    const result = optimize(original, {
+      path: 'input.svg',
+      js2svg: { pretty: true },
+    });
+    expect(normalize(result.data)).toStrictEqual(expected);
+  });
+  it('should not move a group style over a child presentation attribute', async () => {
+    const result = optimize(
+      '<svg xmlns="http://www.w3.org/2000/svg"><g style="fill:red"><rect width="10" height="10" fill="blue"/></g></svg>',
+      { path: 'input.svg' },
+    );
+    expect(result.data).toBe(
+      '<svg xmlns="http://www.w3.org/2000/svg"><g style="fill:red"><path fill="#00f" d="M0 0h10v10H0z"/></g></svg>',
+    );
+  });
+  it('should still collapse groups without style conflicts', async () => {
+    const result = optimize(
+      '<svg xmlns="http://www.w3.org/2000/svg"><g style="fill:red"><rect width="10" height="10"/></g></svg>',
+      { path: 'input.svg' },
+    );
+    expect(result.data).toBe(
+      '<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0h10v10H0z" style="fill:red"/></svg>',
+    );
+  });
   it('should inline entities', async () => {
     const [original, expected] = await parseFixture('entities.svg.txt');
     const result = optimize(original, {

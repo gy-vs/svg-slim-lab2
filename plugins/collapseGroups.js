@@ -1,5 +1,9 @@
-import { collectStylesheet, computeStyle } from '../lib/style.js';
-import { elemsGroups, inheritableAttrs } from './_collections.js';
+import {
+  collectStylesheet,
+  computeStyle,
+  parseStyleDeclarations,
+} from '../lib/style.js';
+import { attrsGroups, elemsGroups, inheritableAttrs } from './_collections.js';
 
 export const name = 'collapseGroups';
 export const description = 'collapses useless groups';
@@ -86,10 +90,41 @@ export const fn = (root) => {
           ) {
             const newChildElemAttrs = { ...firstChild.attributes };
 
+            // presentation properties declared in the child's own inline
+            // style, those take precedence over anything copied from the
+            // group and therefore cannot conflict with it
+            const childStyleProps = new Set(
+              firstChild.attributes.style == null
+                ? []
+                : parseStyleDeclarations(firstChild.attributes.style).map(
+                    (declaration) => declaration.name,
+                  ),
+            );
+
             for (const [name, value] of Object.entries(node.attributes)) {
               // avoid copying to not conflict with animated attribute
               if (hasAnimatedAttr(firstChild, name)) {
                 return;
+              }
+
+              // an inline style moved to the child would override the
+              // child's own presentation attributes, which have a lower
+              // priority than a style inherited from the group, so the
+              // group must be preserved in that case
+              if (name === 'style') {
+                for (const {
+                  name: propName,
+                  value: propValue,
+                } of parseStyleDeclarations(value)) {
+                  if (
+                    attrsGroups.presentation.has(propName) &&
+                    !childStyleProps.has(propName) &&
+                    newChildElemAttrs[propName] != null &&
+                    newChildElemAttrs[propName] !== propValue
+                  ) {
+                    return;
+                  }
+                }
               }
 
               if (newChildElemAttrs[name] == null) {
